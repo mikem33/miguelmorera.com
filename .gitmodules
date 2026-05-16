@@ -1,9 +1,9 @@
 [submodule "wp"]
     path = wp
-    url = git://github.com/WordPress/WordPress.git
+    url = https://github.com/WordPress/WordPress.git
 [submodule "private"]
     path = private
-    url = https://bitbucket.org/miguelmorera/miguel-morera-site-private-stuff/
+    url = git@bitbucket.org:miguelmorera/miguel-morera-site-private-stuff.git
 [submodule "plugins"]
     path = content/plugins
-    url = https://bitbucket.org/miguelmorera/miguel-morera-site-plugins/
+    url = git@bitbucket.org:miguelmorera/miguel-morera-site-plugins.git
