@@ -15,12 +15,10 @@ const
     concat          = require('gulp-concat'),
     uglify          = require('gulp-uglify'),
     rename          = require('gulp-rename'),
-    merge           = require('merge-stream'),
     svgSprites      = require('gulp-svg-sprite'),
     sourcemaps      = require('gulp-sourcemaps'),
     realFavicon     = require('gulp-real-favicon'),
-    checktextdomain = require('gulp-checktextdomain'),
-    browserSync     = require('browser-sync').create();
+    checktextdomain = require('gulp-checktextdomain');
 
 // Files settings
 const files = {
@@ -44,32 +42,58 @@ const htaccess = '.htaccess';
 gulp.task('php', function() {
     return gulp.src(files.source)
         .pipe(newer(build))
-        .pipe(gulp.dest(build))
-    .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+        .pipe(gulp.dest(build));
+});
+
+gulp.task('php-release', function() {
+    return gulp.src(files.source)
+        .pipe(gulp.dest(build));
 });
 
 // copy Assets not included in the other tasks.
-gulp.task('copy-assets', function() {
-    var copyFonts = gulp.src(fonts, { encoding: false }).pipe(newer(build + 'assets/fonts')).pipe(gulp.dest(build + 'assets/fonts'));
-    var copyLanguageFiles = gulp.src(languageFiles).pipe(gulp.dest(build + 'languages'));
-    var copyScreenshot = gulp.src(screenshot).pipe(newer(build)).pipe(gulp.dest(build));
-    var copyFavicons = gulp.src(favicons, { encoding: false }).pipe(newer(build + 'assets/images/favicons')).pipe(gulp.dest(build + 'assets/images/favicons'));
-    return merge(copyFonts, copyLanguageFiles, copyScreenshot, copyFavicons);
-});
-
-gulp.task('copy-config-files', function(done) {
-    var streams = [
-        gulp.src(readme, { allowEmpty: true }).pipe(newer(files.dist)).pipe(gulp.dest(files.dist)),
-        gulp.src(htaccess, { allowEmpty: true }).pipe(gulp.dest(files.dist))
-    ];
-    if (fs.existsSync('content/languages')) {
-        streams.push(gulp.src(wpLanguageFiles).pipe(gulp.dest(files.dist + 'content/languages')));
+gulp.task('copy-assets', gulp.parallel(
+    function copyFontsAssets() {
+        return gulp.src(fonts, { encoding: false, allowEmpty: true })
+            .pipe(newer(build + 'assets/fonts'))
+            .pipe(gulp.dest(build + 'assets/fonts'));
+    },
+    function copyLanguageFiles() {
+        return gulp.src(languageFiles, { allowEmpty: true })
+            .pipe(gulp.dest(build + 'languages'));
+    },
+    function copyScreenshot() {
+        return gulp.src(screenshot, { allowEmpty: true })
+            .pipe(newer(build))
+            .pipe(gulp.dest(build));
+    },
+    function copyFavicons() {
+        return gulp.src(favicons, { encoding: false, allowEmpty: true })
+            .pipe(newer(build + 'assets/images/favicons'))
+            .pipe(gulp.dest(build + 'assets/images/favicons'));
     }
-    return merge(...streams);
-});
+));
+
+gulp.task('copy-config-files', gulp.parallel(
+    function copyReadme() {
+        return gulp.src(readme, { allowEmpty: true })
+            .pipe(newer(files.dist))
+            .pipe(gulp.dest(files.dist));
+    },
+    function copyHtaccess() {
+        return gulp.src(htaccess, { allowEmpty: true })
+            .pipe(gulp.dest(files.dist));
+    },
+    function copyWpLanguages(done) {
+        if (fs.existsSync('content/languages')) {
+            return gulp.src(wpLanguageFiles, { allowEmpty: true })
+                .pipe(gulp.dest(files.dist + 'content/languages'));
+        }
+        done();
+    }
+));
 
 gulp.task('acf-json', function() {
-    return gulp.src(acfFields)
+    return gulp.src(acfFields, { allowEmpty: true })
         .pipe(newer(build + 'includes/acf-json'))
         .pipe(gulp.dest(build + 'includes/acf-json'));
 });
@@ -86,15 +110,14 @@ gulp.task('styles', function(){
         .on('error', swallowError)
         .pipe(sourcemaps.write('.'))
         .pipe(hasNotifySend ? notify('Compiled!') : noop())
-        .pipe(gulp.dest(build))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+        .pipe(gulp.dest(build));
 });
 
 // Generate Javascript
 gulp.task('js-compiled', function(){
     return gulp.src([
             'source/assets/javascript/compile/*.js'
-        ])
+        ], { allowEmpty: true })
         .pipe(concat('javascript.min.js'))
         .pipe(gulp.dest(build + 'assets/javascript'))
         .pipe(babel({
@@ -102,17 +125,15 @@ gulp.task('js-compiled', function(){
         }))
         .pipe(uglify())
         .on('error', swallowError)
-        .pipe(gulp.dest(build + 'assets/javascript'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+        .pipe(gulp.dest(build + 'assets/javascript'));
 });
 
 gulp.task('js-templates', function(){
-    return gulp.src('source/assets/javascript/source/*.js')
+    return gulp.src('source/assets/javascript/source/*.js', { allowEmpty: true })
         .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))
         .on('error', swallowError)
-        .pipe(gulp.dest(build + 'assets/javascript'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+        .pipe(gulp.dest(build + 'assets/javascript'));
 });
 
 gulp.task('copy-images', function() {
@@ -120,17 +141,15 @@ gulp.task('copy-images', function() {
             'source/assets/images/**/*',
             '!source/assets/images/_*/',
             '!source/assets/images/_*/**/*'
-        ])
+        ], { allowEmpty: true })
         .pipe(newer(build + 'assets/images'))
-        .pipe(gulp.dest(build + 'assets/images'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+        .pipe(gulp.dest(build + 'assets/images'));
 });
 
 gulp.task('copy-fonts', function() {
-    return gulp.src(['source/assets/fonts/*'], { encoding: false })
+    return gulp.src(['source/assets/fonts/*'], { encoding: false, allowEmpty: true })
         .pipe(newer(build + 'assets/fonts'))
-        .pipe(gulp.dest(build + 'assets/fonts'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+        .pipe(gulp.dest(build + 'assets/fonts'));
 });
 
 gulp.task('copy-muplugins', function() {
@@ -152,10 +171,9 @@ config = {
 };
 
 gulp.task('svgsprites', function(done) {
-    return gulp.src('source/assets/images/_svg-sprites/*.svg')
+    return gulp.src('source/assets/images/_svg-sprites/*.svg', { allowEmpty: true })
     .pipe(svgSprites(config))
-    .pipe(gulp.dest(build + 'assets/images'))
-    .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
+    .pipe(gulp.dest(build + 'assets/images'));
 });
 
 function watchFiles(done) {
@@ -220,7 +238,7 @@ gulp.task('release', gulp.series('env-prod',
         'copy-assets',
         'copy-config-files',
         'svgsprites',
-        'php',
+        'php-release',
         'acf-json',
         'copy-muplugins'
     ), 
