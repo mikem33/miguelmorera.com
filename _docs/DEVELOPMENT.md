@@ -108,6 +108,40 @@ During development, `pnpm watch` is the main command. It compiles directly into 
 
 `gulp watch` only works directly if `gulp-cli` is installed globally. Without a global install, use `pnpm watch` (or `pnpm exec gulp watch`).
 
+The same applies to release commands: use `pnpm exec gulp release` by default, or `gulp release` if `gulp-cli` is installed globally.
+
+## Releasing to master
+
+`master` contains the compiled output. The `dist/` folder is a git worktree linked to `master`, so you can compile and commit directly from `develop`.
+
+**One-time setup:**
+
+```bash
+git worktree add dist master
+```
+
+This creates `dist/` as a checkout of `master` inside the repo (no separate clone needed). It's gitignored on `develop` so it won't appear as untracked.
+
+**Release workflow:**
+
+```bash
+# 1. Build everything into dist/
+pnpm exec gulp release
+
+# 2. Go into dist/, commit and push to master
+cd dist
+git add .
+git commit -m "release: description of changes"
+git push
+cd ..
+```
+
+**Cleanup** (if you need to remove the worktree):
+
+```bash
+git worktree remove dist
+```
+
 ## Custom post types
 
 Registered in `content/mu-plugins/mm-custom-post-types.php`:
