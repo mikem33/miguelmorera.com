@@ -9,7 +9,7 @@
             if (is_page_template('page-templates/template-home.php')) {
                 wp_enqueue_script( 'home-scripts', get_template_directory_uri() . '/assets/javascript/home.min.js', array('jquery'), $release, true );
             }
-            if (is_page_template('page-templates/template-contact.php') || is_single()) {
+            if (is_page_template('page-templates/template-contact.php') || is_single() || is_404()) {
                 wp_enqueue_script( 'form-scripts', get_template_directory_uri() . '/assets/javascript/form.min.js', array('jquery'), $release, true );
             }
             wp_enqueue_script( 'javascript', get_template_directory_uri() . '/assets/javascript/javascript.min.js', array('jquery'), $release, true );
