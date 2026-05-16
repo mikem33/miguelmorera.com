@@ -45,12 +45,12 @@ gulp.task('php', function() {
     return gulp.src(files.source)
         .pipe(newer(build))
         .pipe(gulp.dest(build))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
+    .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
 // copy Assets not included in the other tasks.
 gulp.task('copy-assets', function() {
-    var copyFonts = gulp.src(fonts).pipe(newer(build + 'assets/fonts')).pipe(gulp.dest(build + 'assets/fonts'));
+    var copyFonts = gulp.src(fonts, { encoding: false }).pipe(newer(build + 'assets/fonts')).pipe(gulp.dest(build + 'assets/fonts'));
     var copyLanguageFiles = gulp.src(languageFiles).pipe(gulp.dest(build + 'languages'));
     var copyScreenshot = gulp.src(screenshot).pipe(newer(build)).pipe(gulp.dest(build));
     var copyFavicons = gulp.src(favicons, { encoding: false }).pipe(newer(build + 'assets/images/favicons')).pipe(gulp.dest(build + 'assets/images/favicons'));
@@ -58,10 +58,14 @@ gulp.task('copy-assets', function() {
 });
 
 gulp.task('copy-config-files', function(done) {
-    var copyReadme = gulp.src(readme).pipe(newer(files.dist)).pipe(gulp.dest(files.dist));
-    var copyHtaccess = gulp.src(htaccess).pipe(gulp.dest(files.dist));
-    var copyWpLanguageFiles = gulp.src(wpLanguageFiles).pipe(gulp.dest(files.dist + 'content/languages'));
-    return merge(copyReadme, copyHtaccess, copyWpLanguageFiles);
+    var streams = [
+        gulp.src(readme, { allowEmpty: true }).pipe(newer(files.dist)).pipe(gulp.dest(files.dist)),
+        gulp.src(htaccess, { allowEmpty: true }).pipe(gulp.dest(files.dist))
+    ];
+    if (fs.existsSync('content/languages')) {
+        streams.push(gulp.src(wpLanguageFiles).pipe(gulp.dest(files.dist + 'content/languages')));
+    }
+    return merge(...streams);
 });
 
 gulp.task('acf-json', function() {
@@ -123,7 +127,7 @@ gulp.task('copy-images', function() {
 });
 
 gulp.task('copy-fonts', function() {
-    return gulp.src(['source/assets/fonts/*'])
+    return gulp.src(['source/assets/fonts/*'], { encoding: false })
         .pipe(newer(build + 'assets/fonts'))
         .pipe(gulp.dest(build + 'assets/fonts'))
         .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
@@ -151,7 +155,7 @@ gulp.task('svgsprites', function(done) {
     return gulp.src('source/assets/images/_svg-sprites/*.svg')
     .pipe(svgSprites(config))
     .pipe(gulp.dest(build + 'assets/images'))
-    .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
+    .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
 function watchFiles(done) {
