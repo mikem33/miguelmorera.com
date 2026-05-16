@@ -1,0 +1,3 @@
+allowBuilds:
+  es5-ext: true
+  phantomjs-prebuilt: true
