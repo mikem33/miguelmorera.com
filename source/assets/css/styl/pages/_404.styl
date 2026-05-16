@@ -20,18 +20,13 @@
         text-align center
         margin-inline auto
     #searchform
-        gap 8px
         width 100%
         justify-content right
-        &, input[type="text"]
+        &, .fieldset, input[type="text"]
             width 100%
         input[type="text"]
-            padding 1rem
-            color $mmBrown
-            border-radius 4px
-            font-size 1.25rem
-            font-family $mmFont
-            border 1px solid white
-            background-color rgba($mmYellow, .8)
+            color white
+            +placeholder()
+                color #d5d5d5
     .footer
         flex-shrink 0
