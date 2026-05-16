@@ -40,8 +40,10 @@
         <?php else : ?>
             <h1 class="title alpha"><?php echo get_the_title($page_id); ?></h1> <!--  /.title alpha -->
         <?php endif; ?>
-        <?php if ($page_header_stuff) : ?>
+        <?php if (!is_404() && $page_header_stuff) : ?>
             <?php echo $page_header_stuff['page_header_text']; ?>
+        <?php elseif (is_404()) : ?>
+            <p><?php _e('Lo sentimos pero la página que estabas buscando no se ha encontrado o no está disponible en este momento.','prometheus'); ?></p>
         <?php elseif (get_post_type() == 'mm_work') : ?>
             <p><?php echo get_field('work_subtitle', $page_id); ?></p>
         <?php endif; ?>

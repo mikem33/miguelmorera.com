@@ -1,0 +1,37 @@
+/* ---------------------------- *\
+
+    $404
+
+\*----------------------------- */
+
+.page__404
+    display flex
+    flex-direction column
+    min-height 100vh
+    .main
+        flex-grow 1
+    .page__header
+        background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='105' viewBox='0 0 80 105'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='death-star' fill='%230e3265' fill-opacity='0.4'%3E%3Cpath d='M20 10a5 5 0 0 1 10 0v50a5 5 0 0 1-10 0V10zm15 35a5 5 0 0 1 10 0v50a5 5 0 0 1-10 0V45zM20 75a5 5 0 0 1 10 0v20a5 5 0 0 1-10 0V75zm30-65a5 5 0 0 1 10 0v50a5 5 0 0 1-10 0V10zm0 65a5 5 0 0 1 10 0v20a5 5 0 0 1-10 0V75zM35 10a5 5 0 0 1 10 0v20a5 5 0 0 1-10 0V10zM5 45a5 5 0 0 1 10 0v50a5 5 0 0 1-10 0V45zm0-35a5 5 0 0 1 10 0v20a5 5 0 0 1-10 0V10zm60 35a5 5 0 0 1 10 0v50a5 5 0 0 1-10 0V45zm0-35a5 5 0 0 1 10 0v20a5 5 0 0 1-10 0V10z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+    .not-found__content
+        color white
+    .content
+        width 100%
+        max-width 500px
+        text-align center
+        margin-inline auto
+    #searchform
+        gap 8px
+        width 100%
+        justify-content right
+        &, input[type="text"]
+            width 100%
+        input[type="text"]
+            padding 1rem
+            color $mmBrown
+            border-radius 4px
+            font-size 1.25rem
+            font-family $mmFont
+            border 1px solid white
+            background-color rgba($mmYellow, .8)
+    .footer
+        flex-shrink 0
