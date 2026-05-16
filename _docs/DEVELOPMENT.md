@@ -58,20 +58,36 @@ git submodule update
 ## Requirements
 
 - Node.js (v18+)
-- npm
+- pnpm
 - A local web server (Apache or Nginx) with PHP and MySQL/MariaDB
+
+If `pnpm` is not installed, enable it with Corepack (included with modern Node.js):
+
+```bash
+sudo corepack enable
+corepack prepare pnpm@latest --activate
+```
 
 ## Setup
 
-1. Clone the repo and checkout `develop`
-2. Initialise submodules (see above)
+1. Clone the repo and switch to `develop`:
+   ```bash
+   git clone git@github.com:mikem33/miguelmorera.com.git
+   cd <cloned-folder>
+   git checkout develop
+   ```
+2. Initialise submodules (see above):
+   ```bash
+   git submodule init
+   git submodule update
+   ```
 3. Create the shared uploads directory (gitignored, not cloned):
    ```bash
-   mkdir -p src/shared/content/uploads
+   mkdir -p shared/content/uploads
    ```
 4. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 5. Configure your local environment in `private/config.php` (DB credentials, site URL, etc.)
 
@@ -79,16 +95,18 @@ git submodule update
 
 | Task | Description |
 |------|-------------|
-| `gulp watch` | Watches source files and compiles on change. Also starts Browser-sync. |
-| `gulp styles` | Compiles Stylus to `content/themes/prometheus/style.css` |
-| `gulp js-compiled` | Bundles and transpiles JS via Babel, outputs minified file |
-| `gulp js-templates` | Minifies individual JS files |
-| `gulp copy-images` | Copies images to theme |
-| `gulp svgsprites` | Generates SVG sprite from `source/assets/images/_svg-sprites/` |
-| `gulp release` | Full production build — compiles everything to `dist/` |
-| `gulp checktextdomain` | Checks all gettext calls use the correct text domain |
+| `pnpm watch` | Runs an initial compile, then watches source files and recompiles on change. |
+| `pnpm styles` | Compiles Stylus to `content/themes/prometheus/style.css` |
+| `pnpm js` | Bundles and transpiles JS via Babel, outputs minified file |
+| `pnpm exec gulp js-templates` | Minifies individual JS files |
+| `pnpm exec gulp copy-images` | Copies images to theme |
+| `pnpm exec gulp svgsprites` | Generates SVG sprite from `source/assets/images/_svg-sprites/` |
+| `pnpm build` | Full production build — compiles everything to `dist/` |
+| `pnpm exec gulp checktextdomain` | Checks all gettext calls use the correct text domain |
 
-During development, `gulp watch` is the main command. It compiles directly into `content/themes/prometheus/`, which is where the local web server reads the theme from.
+During development, `pnpm watch` is the main command. It compiles directly into `content/themes/prometheus/`, which is where the local web server reads the theme from.
+
+`gulp watch` only works directly if `gulp-cli` is installed globally. Without a global install, use `pnpm watch` (or `pnpm exec gulp watch`).
 
 ## Custom post types
 
