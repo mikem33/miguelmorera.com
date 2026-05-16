@@ -1,10 +1,13 @@
+const { Transform } = require('stream');
+const noop = () => new Transform({ objectMode: true, transform(f, _, cb) { cb(null, f); } });
+
 const
     // source and build folders
     theme           = 'content/themes/prometheus/',
     fs              = require('fs'),
+    spawnSync       = require('child_process').spawnSync,
     gulp            = require('gulp'),
     nib             = require('nib'),
-    gutil           = require('gulp-util'),
     newer           = require('gulp-newer'),
     babel           = require('gulp-babel'),
     stylus          = require('gulp-stylus'),
@@ -26,6 +29,7 @@ const files = {
 };
 
 var build = theme;
+const hasNotifySend = spawnSync('which', ['notify-send'], { stdio: 'ignore' }).status === 0;
 
 const acfFields = 'source/includes/acf-json/*.json';
 const screenshot = 'source/screenshot.png';
@@ -37,40 +41,37 @@ const favicons = 'source/assets/images/favicons/*.*';
 const htaccess = '.htaccess';
 
 // copy PHP files.
-gulp.task('php', function(done) {
+gulp.task('php', function() {
     return gulp.src(files.source)
         .pipe(newer(build))
         .pipe(gulp.dest(build))
         .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
-    done();
 });
 
 // copy Assets not included in the other tasks.
-gulp.task('copy-assets', function(done) {
+gulp.task('copy-assets', function() {
     var copyFonts = gulp.src(fonts).pipe(newer(build + 'assets/fonts')).pipe(gulp.dest(build + 'assets/fonts'));
     var copyLanguageFiles = gulp.src(languageFiles).pipe(gulp.dest(build + 'languages'));
     var copyScreenshot = gulp.src(screenshot).pipe(newer(build)).pipe(gulp.dest(build));
     var copyFavicons = gulp.src(favicons, { encoding: false }).pipe(newer(build + 'assets/images/favicons')).pipe(gulp.dest(build + 'assets/images/favicons'));
-    return merge(copyScreenshot, copyFavicons);
-    done();
+    return merge(copyFonts, copyLanguageFiles, copyScreenshot, copyFavicons);
 });
 
 gulp.task('copy-config-files', function(done) {
     var copyReadme = gulp.src(readme).pipe(newer(files.dist)).pipe(gulp.dest(files.dist));
     var copyHtaccess = gulp.src(htaccess).pipe(gulp.dest(files.dist));
     var copyWpLanguageFiles = gulp.src(wpLanguageFiles).pipe(gulp.dest(files.dist + 'content/languages'));
-    done();
+    return merge(copyReadme, copyHtaccess, copyWpLanguageFiles);
 });
 
-gulp.task('acf-json', function(done) {
+gulp.task('acf-json', function() {
     return gulp.src(acfFields)
         .pipe(newer(build + 'includes/acf-json'))
-        .pipe(gulp.dest(build + 'includes/acf-json'))
-    done();
+        .pipe(gulp.dest(build + 'includes/acf-json'));
 });
 
-gulp.task('styles', function(done){
-    gulp.src('source/assets/css/styl/style.styl')
+gulp.task('styles', function(){
+    return gulp.src('source/assets/css/styl/style.styl')
         .pipe(sourcemaps.init())
         .pipe(stylus({
             compress: true, 
@@ -80,10 +81,9 @@ gulp.task('styles', function(done){
         }))
         .on('error', swallowError)
         .pipe(sourcemaps.write('.'))
-        .pipe(notify('Compiled!'))
+        .pipe(hasNotifySend ? notify('Compiled!') : noop())
         .pipe(gulp.dest(build))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
-        done();
+        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
 // Generate Javascript
@@ -99,7 +99,7 @@ gulp.task('js-compiled', function(){
         .pipe(uglify())
         .on('error', swallowError)
         .pipe(gulp.dest(build + 'assets/javascript'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
+        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
 gulp.task('js-templates', function(){
@@ -108,10 +108,10 @@ gulp.task('js-templates', function(){
         .pipe(rename({ suffix: '.min' }))
         .on('error', swallowError)
         .pipe(gulp.dest(build + 'assets/javascript'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
+        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
-gulp.task('copy-images', function(done) {
+gulp.task('copy-images', function() {
     return gulp.src([
             'source/assets/images/**/*',
             '!source/assets/images/_*/',
@@ -119,22 +119,19 @@ gulp.task('copy-images', function(done) {
         ])
         .pipe(newer(build + 'assets/images'))
         .pipe(gulp.dest(build + 'assets/images'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
-        done();
+        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
-gulp.task('copy-fonts', function(done) {
+gulp.task('copy-fonts', function() {
     return gulp.src(['source/assets/fonts/*'])
         .pipe(newer(build + 'assets/fonts'))
         .pipe(gulp.dest(build + 'assets/fonts'))
-        .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
-        done();
+        .pipe(browserSync ? browserSync.reload({ stream: true }) : noop());
 });
 
-gulp.task('copy-muplugins', function(done) {
+gulp.task('copy-muplugins', function() {
     return gulp.src('content/mu-plugins/*')
         .pipe(gulp.dest('dist/content/mu-plugins/'));
-    done();
 });
 
 config = {
@@ -151,22 +148,27 @@ config = {
 };
 
 gulp.task('svgsprites', function(done) {
-    gulp.src('source/assets/images/_svg-sprites/*.svg')
+    return gulp.src('source/assets/images/_svg-sprites/*.svg')
     .pipe(svgSprites(config))
     .pipe(gulp.dest(build + 'assets/images'))
     .pipe(browserSync ? browserSync.reload({ stream: true }) : gutil.noop());
-    done();
 });
 
-gulp.task('watch', function() {
-    gulp.watch('source/assets/css/styl/**/*.styl', gulp.series('styles'));
-    gulp.watch('source/assets/javascript/source/*.js', gulp.series('js-templates'));
-    gulp.watch('source/assets/javascript/compile/*.js', gulp.series('js-compiled'));
-    gulp.watch('source/assets/images/*.*', gulp.series('copy-images'));
-    gulp.watch('source/assets/fonts/*.*', gulp.series('copy-fonts'));
-    gulp.watch('source/**/*.php', gulp.series('php'));
-    gulp.watch(acfFields, gulp.series('acf-json'));
-});
+function watchFiles(done) {
+    // usePolling is required when running in WSL watching /mnt/c/ files edited from Windows
+    const watchOpts = { usePolling: true, interval: 500 };
+    console.log('Watching source files for changes...');
+    gulp.watch('source/assets/css/styl/**/*.styl', watchOpts, gulp.series('styles'));
+    gulp.watch('source/assets/javascript/source/*.js', watchOpts, gulp.series('js-templates'));
+    gulp.watch('source/assets/javascript/compile/*.js', watchOpts, gulp.series('js-compiled'));
+    gulp.watch('source/assets/images/*.*', watchOpts, gulp.series('copy-images'));
+    gulp.watch('source/assets/fonts/*.*', watchOpts, gulp.series('copy-fonts'));
+    gulp.watch('source/**/*.php', watchOpts, gulp.series('php'));
+    gulp.watch(acfFields, watchOpts, gulp.series('acf-json'));
+    done();
+}
+
+gulp.task('watch', watchFiles);
 
 
 // Check textdomains in the theme.
