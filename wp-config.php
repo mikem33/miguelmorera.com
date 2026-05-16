@@ -9,7 +9,7 @@ include( dirname( __FILE__ ) . '/private/config.php' );
  * Custom Content Directory
  */
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
-define( 'WP_CONTENT_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/content' );
+define( 'WP_CONTENT_URL', ( ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . '/content' );
 define( 'ROOT_PATH', dirname( __FILE__ ) );
 
 define( 'DB_CHARSET', 'utf8' );
