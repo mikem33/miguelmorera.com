@@ -48,7 +48,7 @@
                                 </div> <!--  /.content -->
                             <?php elseif ($block_data['acf_fc_layout'] == 'image') : ?>
                                 <?php $image = $block_data['image']; ?>
-                                <img src="<?php echo $image['sizes']['item-thumbnail']; ?>" srcset="<?php echo $image['sizes']['item-thumbnail-little']; ?> 480w, <?php echo $image['sizes']['item-thumbnail-medium']; ?> 640w, <?php echo $image['sizes']['item-thumbnail']; ?> 960w" sizes="auto" alt="<?php _e('Imagen','prometheus'); ?>" />
+                                <img src="<?php echo $image['sizes']['item-thumbnail']; ?>" width="<?php echo $image['sizes']['item-thumbnail-width']; ?>" height="<?php echo $image['sizes']['item-thumbnail-height']; ?>" srcset="<?php echo $image['sizes']['item-thumbnail-little']; ?> 480w, <?php echo $image['sizes']['item-thumbnail-medium']; ?> 640w, <?php echo $image['sizes']['item-thumbnail']; ?> 960w" sizes="auto" alt="<?php _e('Imagen','prometheus'); ?>" />
                             <?php elseif ($block_data['acf_fc_layout'] == 'video') : ?>
                                 <div class="content" style="background-image: url('<?php echo $block_data['fallback_image']; ?>');">
                                     <?php if ( !$detect->isMobile() || !$detect->isTablet() ) : ?>
