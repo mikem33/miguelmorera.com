@@ -1,4 +1,4 @@
 <?php
     global $release, $post;
-    $release = '0.16';
+    $release = '0.20';
 ?>
