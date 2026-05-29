@@ -27,6 +27,7 @@ const files = {
 };
 
 var build = theme;
+var isProduction = false;
 const hasNotifySend = spawnSync('which', ['notify-send'], { stdio: 'ignore' }).status === 0;
 
 const acfFields = 'source/includes/acf-json/*.json';
@@ -99,17 +100,17 @@ gulp.task('acf-json', function() {
 });
 
 gulp.task('styles', function(){
-    return gulp.src('source/assets/css/styl/style.styl')
-        .pipe(sourcemaps.init())
-        .pipe(stylus({
+    var s = gulp.src('source/assets/css/styl/style.styl');
+    if (!isProduction) s = s.pipe(sourcemaps.init());
+    s = s.pipe(stylus({
             compress: true, 
             use: nib(),
             'include css': true,
             paths: ['source/assets/css/styl']
         }))
-        .on('error', swallowError)
-        .pipe(sourcemaps.write('.'))
-        .pipe(hasNotifySend ? notify('Compiled!') : noop())
+        .on('error', swallowError);
+    if (!isProduction) s = s.pipe(sourcemaps.write('.'));
+    return s.pipe(hasNotifySend ? notify('Compiled!') : noop())
         .pipe(gulp.dest(build));
 });
 
@@ -153,7 +154,8 @@ gulp.task('copy-fonts', function() {
 });
 
 gulp.task('copy-muplugins', function() {
-    return gulp.src('content/mu-plugins/*')
+    return gulp.src('content/mu-plugins/*', { allowEmpty: true })
+        .pipe(newer('dist/content/mu-plugins/'))
         .pipe(gulp.dest('dist/content/mu-plugins/'));
 });
 
@@ -226,6 +228,7 @@ gulp.task('checktextdomain', function() {
 
 gulp.task('env-prod', function(done) {
     build = files.dist + build;
+    isProduction = true;
     done();
 });
 
