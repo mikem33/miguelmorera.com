@@ -232,6 +232,17 @@ gulp.task('env-prod', function(done) {
     done();
 });
 
+gulp.task('init', gulp.parallel(
+    'styles',
+    'js-templates',
+    'js-compiled',
+    'copy-images',
+    'copy-assets',
+    'copy-config-files',
+    'php',
+    'acf-json'
+));
+
 gulp.task('release', gulp.series('env-prod', 
     gulp.parallel(
         'styles',

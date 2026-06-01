@@ -4,6 +4,7 @@
   "description": "Base Custom Wordpress Theme for developing sites.",
   "main": "gulpfile.js",
   "scripts": {
+    "init": "gulp init",
     "watch": "gulp watch",
     "build": "gulp release",
     "styles": "gulp styles",

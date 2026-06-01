@@ -1,3 +1,6 @@
 allowBuilds:
   es5-ext: true
   phantomjs-prebuilt: true
+onlyBuiltDependencies:
+  - es5-ext
+  - phantomjs-prebuilt

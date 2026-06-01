@@ -95,6 +95,7 @@ corepack prepare pnpm@latest --activate
 
 | Task | Description |
 |------|-------------|
+| `pnpm init` | One-off full compile into `content/themes/prometheus/`. Run this after cloning before starting `watch`. |
 | `pnpm watch` | Runs an initial compile, then watches source files and recompiles on change. |
 | `pnpm styles` | Compiles Stylus to `content/themes/prometheus/style.css` |
 | `pnpm js` | Bundles and transpiles JS via Babel, outputs minified file |
