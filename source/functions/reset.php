@@ -17,11 +17,27 @@
     // Remove version from RSS
     add_filter('the_generator', '__return_empty_string');
 
-    // Remove version from scripts and styles
+    // Swap the WP version in scripts and styles for the file's timestamp,
+    // so the version is not exposed but the browser still sees URL changes.
     function shapeSpace_remove_version_scripts_styles($src) {
-        if (strpos($src, 'ver=')) {
-            $src = remove_query_arg('ver', $src);
+        if (strpos($src, 'ver=') === false) return $src;
+
+        $src  = remove_query_arg('ver', $src);
+        $path = parse_url($src, PHP_URL_PATH);
+        if (!$path) return $src;
+
+        $roots = array(
+            array(parse_url(WP_CONTENT_URL, PHP_URL_PATH), untrailingslashit(WP_CONTENT_DIR)),
+            array(parse_url(site_url(), PHP_URL_PATH), untrailingslashit(ABSPATH)),
+        );
+
+        foreach ($roots as $root) {
+            list($base, $dir) = $root;
+            if (strpos($path, $base . '/') !== 0) continue;
+            $file = $dir . substr($path, strlen($base));
+            if (is_file($file)) return add_query_arg('ver', filemtime($file), $src);
         }
+
         return $src;
     }
     add_filter('style_loader_src', 'shapeSpace_remove_version_scripts_styles', 9999);
