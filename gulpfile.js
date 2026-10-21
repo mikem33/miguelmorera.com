@@ -80,8 +80,17 @@ gulp.task('copy-config-files', gulp.parallel(
             .pipe(newer(files.dist))
             .pipe(gulp.dest(files.dist));
     },
+    // Drops the "# BEGIN local-only" ... "# END local-only" block: development rules
+    // (e.g. uploads proxied to production) must never reach the production .htaccess.
     function copyHtaccess() {
+        const stripLocalOnly = new Transform({ objectMode: true, transform(file, _, cb) {
+            const contents = file.contents.toString()
+                .replace(/^# BEGIN local-only\n[\s\S]*?^# END local-only\n\n?/m, '');
+            file.contents = Buffer.from(contents);
+            cb(null, file);
+        } });
         return gulp.src(htaccess, { allowEmpty: true })
+            .pipe(stripLocalOnly)
             .pipe(gulp.dest(files.dist));
     },
     function copyWpLanguages(done) {

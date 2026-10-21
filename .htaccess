@@ -1,12 +1,15 @@
 RedirectMatch 404 /\.git
 Options -Indexes
 
-# Proxy uploads to production when not found locally
+# BEGIN local-only
+# Proxy uploads to production when not found locally. The release build drops this block
+# (gulpfile.js, copyHtaccess): on production it would redirect a missing file to itself.
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^content/uploads/(.*)$ https://miguelmorera.com/content/uploads/$1 [R=302,L]
 </IfModule>
+# END local-only
 
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
