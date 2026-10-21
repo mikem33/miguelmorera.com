@@ -9,24 +9,15 @@ include( dirname( __FILE__ ) . '/private/config.php' );
  * Custom Content Directory
  */
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
-define( 'WP_CONTENT_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/content' );
+define( 'WP_CONTENT_URL', ( ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . '/content' );
 define( 'ROOT_PATH', dirname( __FILE__ ) );
 
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
 /**
- * Salts, for security 
- * Grab these from: https://api.wordpress.org/secret-key/1.1/salt
+ * Salts live in the environment config (private/*-config.php), never in this public repo.
  */
-define( 'AUTH_KEY',         'put your unique phrase here' );
-define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
-define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
-define( 'NONCE_KEY',        'put your unique phrase here' );
-define( 'AUTH_SALT',        'put your unique phrase here' );
-define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
-define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
-define( 'NONCE_SALT',       'put your unique phrase here' );
 
 /**
  * Language
