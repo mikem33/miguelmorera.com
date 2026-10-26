@@ -9,7 +9,7 @@
 
 <section class="home__articles home__section items section space" id="content" data-bg-color="#f45a5a" data-type="dark" data-scroll>
     <header class="section__header wrapper">
-        <h3 class="title"><?php _e('De vez en cuando me gusta escribir algunas reflexiones...', 'prometheus'); ?></h3>
+        <h3 class="title"><?php _e('De vez en cuando me gusta escribir algunos artículos...', 'prometheus'); ?></h3>
     </header> <!--  /.section__header -->
     <div class="items__container wrapper">
         <?php
