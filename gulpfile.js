@@ -38,6 +38,8 @@ const fonts = 'source/assets/fonts/*.*';
 const readme = 'README.md';
 const favicons = 'source/assets/images/favicons/*.*';
 const htaccess = '.htaccess';
+// The site's own root files: WordPress lives in wp/, these point the root at it.
+const rootFiles = ['index.php', 'wp-config.php'];
 
 // copy PHP files.
 gulp.task('php', function() {
@@ -78,6 +80,12 @@ gulp.task('copy-config-files', gulp.parallel(
     function copyReadme() {
         return gulp.src(readme, { allowEmpty: true })
             .pipe(newer(files.dist))
+            .pipe(gulp.dest(files.dist));
+    },
+    // No newer(): a checkout can leave dist/ files newer than the sources while their
+    // contents differ, and these files change too rarely for anyone to notice.
+    function copyRootFiles() {
+        return gulp.src(rootFiles, { allowEmpty: true })
             .pipe(gulp.dest(files.dist));
     },
     // Drops the "# BEGIN local-only" ... "# END local-only" block: development rules
