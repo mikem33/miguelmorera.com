@@ -1,6 +1,15 @@
 RedirectMatch 404 /\.git
 Options -Indexes
 
+# The blog section moved from /reflexiones/ to /articulos/ (page, posts, archives, feeds),
+# and the old /es/ language prefix is gone. /es/reflexiones/ goes to /articulos/ in one hop.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^es/reflexiones(/.*)?$ /articulos$1 [R=301,L]
+RewriteRule ^reflexiones(/.*)?$ /articulos$1 [R=301,L]
+RewriteRule ^es(?:/(.*))?$ /$1 [R=301,L]
+</IfModule>
+
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
 # dynamically generated, and should only be modified via WordPress filters.

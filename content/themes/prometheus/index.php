@@ -4,10 +4,10 @@
     include(locate_template('includes/page-header.php'));
 ?>
 
-<section class="thoughts__list items section space" data-bg-color="#f45a5a" data-type="dark" data-scroll>
+<section class="articles__list items section space" data-bg-color="#f45a5a" data-type="dark" data-scroll>
     <div class="items__container wrapper">
     <?php while (have_posts()) : the_post(); ?>
-        <article id="post-<?php the_ID(); ?>" class="thought item">
+        <article id="post-<?php the_ID(); ?>" class="article item">
             <figure>
                 <a href="<?php the_permalink(); ?>">
                     <?php pr_post_thumbnail(get_the_ID()); ?>
@@ -28,12 +28,12 @@
                 <svg width="7" height="12" class="ico"><use xlink:href="#ico-chevron" /></svg>
                 <span><?php _e('Continuar leyendo', 'prometheus'); ?></span>
             </a>
-        </article><!-- .thought .item -->
+        </article><!-- .article .item -->
     <?php endwhile; ?>
     </div> <!--  /.items__container -->
 
     <?php pr_navigation(); ?>
 
-</section> <!--  /.thoughts__list -->
+</section> <!--  /.articles__list -->
 
 <?php get_footer(); ?>

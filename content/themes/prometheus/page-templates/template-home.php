@@ -7,9 +7,9 @@
     include(locate_template('includes/page-header.php'));
 ?>
 
-<section class="home__thoughts home__section items section space" id="content" data-bg-color="#f45a5a" data-type="dark" data-scroll>
+<section class="home__articles home__section items section space" id="content" data-bg-color="#f45a5a" data-type="dark" data-scroll>
     <header class="section__header wrapper">
-        <h3 class="title"><?php _e('De vez en cuando me gusta escribir algunas reflexiones...', 'prometheus'); ?></h3>
+        <h3 class="title"><?php _e('De vez en cuando me gusta escribir algunos artículos...', 'prometheus'); ?></h3>
     </header> <!--  /.section__header -->
     <div class="items__container wrapper">
         <?php
@@ -23,7 +23,7 @@
             while ($home_posts_query->have_posts()) : 
                 $home_posts_query->the_post();
         ?>
-        <article class="thought item">
+        <article class="article item">
             <figure>
                 <a href="<?php the_permalink(); ?>">
                     <?php pr_post_thumbnail(get_the_ID()); ?>
@@ -44,14 +44,14 @@
                 <svg width="7" height="12" class="ico"><use xlink:href="#ico-chevron" /></svg>
                 <span><?php _e('Continue reading', 'prometheus'); ?></span>
             </a>
-        </article><!-- /.thought .item -->
+        </article><!-- /.article .item -->
         <?php endwhile; wp_reset_postdata(); ?>
     </div> <!--  /.items__container -->
     <a href="<?php echo get_permalink(38); ?>" class="button button--white-red button--filled button--icon">
         <span><?php _e('Ver más posts', 'prometheus'); ?></span>
         <svg width="15" height="15" class="ico"><use xlink:href="#ico-circle-arrow" /></svg>
     </a>
-</section> <!--  /.home__thoughts .home__section -->
+</section> <!--  /.home__articles .home__section -->
 
 <section class="home__comics home__section items section space" data-scroll data-type="light" data-bg-color="#ffe42b">
     <header class="section__header wrapper">
