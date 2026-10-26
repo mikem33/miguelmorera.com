@@ -29,7 +29,10 @@ define( 'WPLANG', '' );
 // Hide errors
 // ===========
 ini_set( 'display_errors', 0 );
-define( 'WP_DEBUG_DISPLAY', false );
+// The environment config may already define it (production-config.php does).
+if ( ! defined( 'WP_DEBUG_DISPLAY' ) ) {
+    define( 'WP_DEBUG_DISPLAY', false );
+}
 
 /**
  * Debug mode
