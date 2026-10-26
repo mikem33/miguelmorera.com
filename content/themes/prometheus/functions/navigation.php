@@ -31,7 +31,7 @@
         // Previous
         if( $current > 1 ) {
             $settings['count']--;
-            $links[] = pr_navigation_link( $current - 1, ' nav__link--prev '.$nav_button_color_class, $settings['prev_text'] );
+            $links[] = pr_navigation_link( $current - 1, ' nav__link--prev', $settings['prev_text'] );
         }
         // Current
         $links[] = pr_navigation_link( $current, 'current' );
@@ -44,7 +44,7 @@
         }
         // Next
         if( $current < $total ) {
-            $links[] = pr_navigation_link( $current + 1, ' nav__link--next'.$nav_button_color_class, $settings['next_text'] );
+            $links[] = pr_navigation_link( $current + 1, ' nav__link--next', $settings['next_text'] );
         }
         echo '<nav class="'.$nav_classes.'" role="navigation">';
             echo join( '', $links );
