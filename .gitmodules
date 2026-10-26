@@ -4,9 +4,9 @@
     ignore = all
 [submodule "private"]
     path = private
-    url = git@bitbucket.org:miguelmorera/miguel-morera-site-private-stuff.git
+    url = ssh://git@mikemserver.tail2bef72.ts.net:2222/miguelmorera/miguel-morera-site-private-stuff.git
     ignore = all
 [submodule "plugins"]
     path = content/plugins
-    url = git@bitbucket.org:miguelmorera/miguel-morera-site-plugins.git
+    url = ssh://git@mikemserver.tail2bef72.ts.net:2222/miguelmorera/miguel-morera-site-plugins.git
     ignore = all
