@@ -1,4 +1,5 @@
 <?php
+    $page_header_style = $page_header_style ?? '';
     if ($page_header_style == 'hero') {
         $additional_header_classes = 'page__header--hero '.$additional_header_classes;
     }
@@ -34,7 +35,7 @@
         <?php elseif (is_404()) : ?>
             <h1 class="title alpha"><?php _e('Página no encontrada','prometheus'); ?></h1> <!--  /.title alpha -->
         <?php
-            elseif ($page_header_stuff['page_header_title']) :
+            elseif (!empty($page_header_stuff['page_header_title'])) :
         ?>
             <h1 class="title alpha<?php echo (is_front_page() ? ' hide-item':''); ?>"><?php echo $page_header_stuff['page_header_title']; ?></h1> <!--  /.title alpha -->
         <?php else : ?>
@@ -74,7 +75,7 @@
         <?php if (is_single()) : ?>
             <?php if (has_post_thumbnail()) : ?>
                 <figure class="bg-image alignfull">
-                    <?php echo get_the_post_thumbnail($page_id, 'full', array('style'=>'object-position: '.$page_header_stuff['page_header_bg_image_pos'].';')); ?>
+                    <?php echo get_the_post_thumbnail($page_id, 'full', array('style'=>'object-position: '.($page_header_stuff['page_header_bg_image_pos'] ?? '').';')); ?>
                 </figure> <!--  /.alignfull -->
             <?php endif; ?>
         <?php endif; ?>

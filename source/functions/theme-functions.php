@@ -105,7 +105,7 @@
         global $post;
         if (is_singular()) {
             $page_id = $post->ID;
-            $page_header_text = get_field('page_header_stuff', $page_id)['page_header_text'];
+            $page_header_text = get_field('page_header_stuff', $page_id)['page_header_text'] ?? '';
             if ($page_header_text){
                 $post_content = $page_header_text;
             } else {
@@ -115,7 +115,7 @@
             $post_content = strip_shortcodes($post_content);
             $post_content = str_replace(array("\n", "\r", "\t"), ' ', $post_content);
             $post_content = str_replace(array('"'), '', $post_content);
-            if (strlen($post_content) > 300) { $excerpt = '...'; }
+            $excerpt = (strlen($post_content) > 300) ? '...' : '';
             $post_content = mb_substr($post_content, 0, 300, 'utf8');
             $post_content = preg_replace('/\s+/', ' ', $post_content);
             $post_content = trim($post_content, ' ');
@@ -181,7 +181,7 @@
      * Add reading time for posts.
      */
     function reading_time() {
-        $content = get_post_field( 'post_content', $post->ID );
+        $content = get_post_field( 'post_content' );
         $word_count = str_word_count( strip_tags( $content ) );
         $readingtime = ceil($word_count / 200);
 

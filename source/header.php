@@ -30,7 +30,11 @@
             }
         ?>
         <header class="header flex" data-header-type="<?php echo $page_header_type; ?>">
-            <?php $logo_classes = ( is_front_page() ? 'logo hide-item' : 'logo' ); ?>
+            <?php
+                // On the front page home.js fades these in.
+                $logo_classes = ( is_front_page() ? 'logo hide-item' : 'logo' );
+                $hide_item = ( is_front_page() ? ' hide-item' : '' );
+            ?>
             <a href="<?php echo home_url(); ?>" class="<?php echo $logo_classes; ?>" title="Miguel Morera" aria-label="Miguel Morera">
                 <svg><use xlink:href="#logo" /></svg>
             </a>
