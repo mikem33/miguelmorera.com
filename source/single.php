@@ -7,7 +7,7 @@
 
 <?php if (have_posts()) : ?>
     <?php while (have_posts()) : the_post(); ?>
-        <article id="content" class="thought thought--single post section space" data-bg-color="#ffffff" data-type="light" data-scroll>
+        <article id="content" class="article article--single post section space" data-bg-color="#ffffff" data-type="light" data-scroll>
             <div class="wrapper">
                 <?php the_content(); ?>
             </div> <!--  /.wrapper -->

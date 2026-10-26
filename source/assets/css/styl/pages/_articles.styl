@@ -1,18 +1,18 @@
 /* ---------------------------- *\
 
-    $Thoughts
+    $Articles
 
 \*----------------------------- */
 
-.page__thoughts
+.page__articles
     .page__header
         background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='72' viewBox='0 0 36 72'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ff8585' fill-opacity='0.35'%3E%3Cpath d='M2 6h12L8 18 2 6zm18 36h12l-6 12-6-12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
 
-.thoughts__list
+.articles__list
     background-color #f45a5a
 
-.thought
-    &.single--thought, &--single
+.article
+    &.single--article, &--single
         background-color white
     &--single
         .alignfull
@@ -23,7 +23,7 @@
         a
             color $mmRed
 
-.thought.item
+.article.item
     color white
     border-bottom-color rgba(white, .25)
     figure a
@@ -44,7 +44,7 @@
             fill @color
 
 .no-touch
-    .thought.item
+    .article.item
         figure a
             &:hover::before
                 background-color rgba($mmRed, 1)
