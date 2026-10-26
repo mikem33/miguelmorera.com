@@ -203,6 +203,7 @@ function watchFiles(done) {
     gulp.watch('source/assets/javascript/source/*.js', watchOpts, gulp.series('js-templates'));
     gulp.watch('source/assets/javascript/compile/*.js', watchOpts, gulp.series('js-compiled'));
     gulp.watch('source/assets/images/*.*', watchOpts, gulp.series('copy-images'));
+    gulp.watch('source/assets/images/_svg-sprites/*.svg', watchOpts, gulp.series('svgsprites'));
     gulp.watch('source/assets/fonts/*.*', watchOpts, gulp.series('copy-fonts'));
     gulp.watch('source/**/*.php', watchOpts, gulp.series('php'));
     gulp.watch(acfFields, watchOpts, gulp.series('acf-json'));
@@ -256,6 +257,7 @@ gulp.task('init', gulp.parallel(
     'copy-images',
     'copy-assets',
     'copy-config-files',
+    'svgsprites',
     'php',
     'acf-json'
 ));
